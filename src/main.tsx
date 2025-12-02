@@ -1,17 +1,32 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-  RouterProvider,
-  createRouter,
-} from "@tanstack/react-router";
+import { QueryClient } from "@tanstack/react-query";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 
-import { routeTree } from "./routeTree.gen"; // This file is auto-generated
+import { routeTree } from "./routeTree.gen"; // auto-generated
+import "./index.css"; // optional, your global styles
 
-// Create router instance
-const router = createRouter({ routeTree });
+// 1️⃣ Create React Query client
+const queryClient = new QueryClient();
 
-// Render app
-ReactDOM.createRoot(document.getElementById("root")!).render(
+// 2️⃣ Create router with context
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
+  },
+});
+
+// 3️⃣ Augment TanStack Router types
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
+
+// 4️⃣ Render app
+const root = ReactDOM.createRoot(document.getElementById("root")!);
+root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
   </React.StrictMode>

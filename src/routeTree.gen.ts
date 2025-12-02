@@ -10,13 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as _authenticatedRouteImport } from './routes/__authenticated'
 import { Route as UsersIndexRouteImport } from './routes/users.index'
 import { Route as UsersUserIdRouteImport } from './routes/users.$userId'
-import { Route as UsersUserIdEditRouteImport } from './routes/users_.$userId.edit'
+import { Route as _authenticatedUsersUserIdEditRouteImport } from './routes/__authenticated/users_.$userId.edit'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const _authenticatedRoute = _authenticatedRouteImport.update({
+  id: '/__authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UsersIndexRoute = UsersIndexRouteImport.update({
@@ -29,30 +34,32 @@ const UsersUserIdRoute = UsersUserIdRouteImport.update({
   path: '/users/$userId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const UsersUserIdEditRoute = UsersUserIdEditRouteImport.update({
-  id: '/users_/$userId/edit',
-  path: '/users/$userId/edit',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const _authenticatedUsersUserIdEditRoute =
+  _authenticatedUsersUserIdEditRouteImport.update({
+    id: '/users_/$userId/edit',
+    path: '/users/$userId/edit',
+    getParentRoute: () => _authenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/users': typeof UsersIndexRoute
-  '/users/$userId/edit': typeof UsersUserIdEditRoute
+  '/users/$userId/edit': typeof _authenticatedUsersUserIdEditRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/users': typeof UsersIndexRoute
-  '/users/$userId/edit': typeof UsersUserIdEditRoute
+  '/users/$userId/edit': typeof _authenticatedUsersUserIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/__authenticated': typeof _authenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/users/': typeof UsersIndexRoute
-  '/users_/$userId/edit': typeof UsersUserIdEditRoute
+  '/__authenticated/users_/$userId/edit': typeof _authenticatedUsersUserIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -61,17 +68,18 @@ export interface FileRouteTypes {
   to: '/login' | '/users/$userId' | '/users' | '/users/$userId/edit'
   id:
     | '__root__'
+    | '/__authenticated'
     | '/login'
     | '/users/$userId'
     | '/users/'
-    | '/users_/$userId/edit'
+    | '/__authenticated/users_/$userId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  _authenticatedRoute: typeof _authenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
   UsersUserIdRoute: typeof UsersUserIdRoute
   UsersIndexRoute: typeof UsersIndexRoute
-  UsersUserIdEditRoute: typeof UsersUserIdEditRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -81,6 +89,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/__authenticated': {
+      id: '/__authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof _authenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/users/': {
@@ -97,21 +112,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UsersUserIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/users_/$userId/edit': {
-      id: '/users_/$userId/edit'
+    '/__authenticated/users_/$userId/edit': {
+      id: '/__authenticated/users_/$userId/edit'
       path: '/users/$userId/edit'
       fullPath: '/users/$userId/edit'
-      preLoaderRoute: typeof UsersUserIdEditRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof _authenticatedUsersUserIdEditRouteImport
+      parentRoute: typeof _authenticatedRoute
     }
   }
 }
 
+interface _authenticatedRouteChildren {
+  _authenticatedUsersUserIdEditRoute: typeof _authenticatedUsersUserIdEditRoute
+}
+
+const _authenticatedRouteChildren: _authenticatedRouteChildren = {
+  _authenticatedUsersUserIdEditRoute: _authenticatedUsersUserIdEditRoute,
+}
+
+const _authenticatedRouteWithChildren = _authenticatedRoute._addFileChildren(
+  _authenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
+  _authenticatedRoute: _authenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
   UsersUserIdRoute: UsersUserIdRoute,
   UsersIndexRoute: UsersIndexRoute,
-  UsersUserIdEditRoute: UsersUserIdEditRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

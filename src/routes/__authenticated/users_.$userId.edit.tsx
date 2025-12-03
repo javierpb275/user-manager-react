@@ -2,12 +2,14 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useLocalUsersStore } from "../../stores/users-local.store";
 import { fetchCombinedUser } from "../../services/user.service";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/__authenticated/users_/$userId/edit")({
   component: UserEditPage,
 });
 
 function UserEditPage() {
+  const queryClient = useQueryClient();
   const { userId } = Route.useParams();
   const navigate = useNavigate();
   const updateUser = useLocalUsersStore((s) => s.updateUser);
@@ -30,8 +32,13 @@ function UserEditPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     updateUser(Number(userId), form);
+
+    // 🧹 Limpiar el caché de React Query para este user
+    queryClient.invalidateQueries({ queryKey: ["user", userId] });
+
+    // También para la lista de users (para que se vea actualizado en /users)
+    queryClient.invalidateQueries({ queryKey: ["users"] });
 
     navigate({ to: "/users/$userId", params: { userId } });
   };
@@ -40,7 +47,10 @@ function UserEditPage() {
     <div style={{ padding: 20 }}>
       <h1>Edit User {userId}</h1>
 
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: 10 }}
+      >
         <input
           type="text"
           placeholder="First Name"

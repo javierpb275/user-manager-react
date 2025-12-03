@@ -35,9 +35,20 @@ export async function fetchCombinedUsers(page = 1, perPage = 10) {
 }
 
 export async function fetchCombinedUser(id: number) {
-  const apiRes = await fetchUser(id);
   const { users: local } = useLocalUsersStore.getState();
 
-  const found = local.find((u) => u.id === id);
-  return { data: found || apiRes.data };
+  // Si existe en local, devolverlo sin ni siquiera llamar a la API
+  const localUser = local.find((u) => u.id === id);
+  if (localUser) {
+    return { data: localUser };
+  }
+
+  // Si no está en local, intentar la API
+  try {
+    const apiRes = await fetchUser(id);
+    return { data: apiRes.data };
+  } catch (err) {
+    throw new Error("User not found in API nor local store.");
+  }
 }
+

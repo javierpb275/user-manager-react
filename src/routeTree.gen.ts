@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as _authenticatedRouteImport } from './routes/__authenticated'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as UsersIndexRouteImport } from './routes/users.index'
 import { Route as UsersUserIdRouteImport } from './routes/users.$userId'
 import { Route as _authenticatedUsersUserIdEditRouteImport } from './routes/__authenticated/users_.$userId.edit'
@@ -22,6 +23,11 @@ const LoginRoute = LoginRouteImport.update({
 } as any)
 const _authenticatedRoute = _authenticatedRouteImport.update({
   id: '/__authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UsersIndexRoute = UsersIndexRouteImport.update({
@@ -42,12 +48,14 @@ const _authenticatedUsersUserIdEditRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/users': typeof UsersIndexRoute
   '/users/$userId/edit': typeof _authenticatedUsersUserIdEditRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/users': typeof UsersIndexRoute
@@ -55,6 +63,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/__authenticated': typeof _authenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/users/$userId': typeof UsersUserIdRoute
@@ -63,11 +72,17 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/users/$userId' | '/users' | '/users/$userId/edit'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/users/$userId'
+    | '/users'
+    | '/users/$userId/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/users/$userId' | '/users' | '/users/$userId/edit'
+  to: '/' | '/login' | '/users/$userId' | '/users' | '/users/$userId/edit'
   id:
     | '__root__'
+    | '/'
     | '/__authenticated'
     | '/login'
     | '/users/$userId'
@@ -76,6 +91,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   _authenticatedRoute: typeof _authenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
   UsersUserIdRoute: typeof UsersUserIdRoute
@@ -96,6 +112,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof _authenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/users/': {
@@ -135,6 +158,7 @@ const _authenticatedRouteWithChildren = _authenticatedRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   _authenticatedRoute: _authenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
   UsersUserIdRoute: UsersUserIdRoute,

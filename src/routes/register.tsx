@@ -37,7 +37,7 @@ function RegisterPage() {
     }
 
     const newUser = {
-      id: users.length + 1000,
+      id: Date.now(),
       email: form.email,
       first_name: form.username,
       last_name: "",

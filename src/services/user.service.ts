@@ -1,6 +1,6 @@
-import type { ApiUpdateUserResponse, ApiUserResponse, ApiUsersListResponse } from "../types/api.types";
+import { useLocalUsersStore } from "../stores/users-local.store";
+import type { ApiUsersListResponse, ApiUserResponse } from "../types/api.types";
 import { api } from "./api.service";
-
 
 export async function fetchUsers(page = 1, perPage = 10): Promise<ApiUsersListResponse> {
   const res = await api.get<ApiUsersListResponse>("/users", {
@@ -14,10 +14,24 @@ export async function fetchUser(id: number): Promise<ApiUserResponse> {
   return res.data;
 }
 
-export async function updateUser(
-  id: number,
-  payload: Partial<{ email: string; first_name: string; last_name: string }>
-): Promise<ApiUpdateUserResponse> {
-  const res = await api.patch<ApiUpdateUserResponse>(`/users/${id}`, payload);
-  return res.data;
+export async function fetchCombinedUsers(page = 1, perPage = 10): Promise<ApiUsersListResponse> {
+  const apiRes = await fetchUsers(page, perPage);
+  const { users: local } = useLocalUsersStore.getState();
+
+  const merged = apiRes.data.map(
+    (u) => local.find((lu) => lu.id === u.id) || u
+  );
+
+  const newUsers = local.filter((u) => u.id > 1000);
+
+  return { ...apiRes, data: [...merged, ...newUsers] };
+}
+
+export async function fetchCombinedUser(id: number): Promise<ApiUserResponse> {
+  const apiRes = await fetchUser(id);
+  const { users: local } = useLocalUsersStore.getState();
+
+  const found = local.find((u) => u.id === id);
+
+  return { data: found || apiRes.data };
 }

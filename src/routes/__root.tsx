@@ -1,3 +1,5 @@
+// src/routes/__root.tsx
+
 import {
   createRootRouteWithContext,
   Link,
@@ -5,30 +7,40 @@ import {
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import type { QueryClient } from '@tanstack/react-query'
+import { useAuthUserStore } from '../stores/auth-user.store'
 
-// 1️⃣ Define what your router context will contain
 export interface MyRouterContext {
   queryClient: QueryClient
 }
 
-// 2️⃣ Create the root route with context support
+// ⬇️ Mueve el componente fuera y dale un nombre en mayúscula
+function RootLayout() {
+  const logoutStore = useAuthUserStore((s) => s.logoutStore);
+  const user = useAuthUserStore((s) => s.user);
+
+  return (
+    <div>
+      <header style={{ display: "flex", gap: 10 }}>
+        <Link to="/users">USERS</Link>
+        {!user && <Link to="/login">LOGIN</Link>}
+        {!user && <Link to="/register">REGISTER</Link>}
+        {user && (
+          <button onClick={logoutStore}>
+            LOG OUT ({user.first_name})
+          </button>
+        )}
+      </header>
+
+      <main>
+        <Outlet />
+      </main>
+
+      <TanStackRouterDevtools />
+    </div>
+  );
+}
+
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  component: () => {
-    return (
-      <div>
-        <header>
-          <Link to="/users">USERS</Link>{' '}
-          <Link to="/login">LOGIN</Link>
-        </header>
-
-        <main>
-          <Outlet /> {/* Child routes render here */}
-        </main>
-
-        <TanStackRouterDevtools />
-      </div>
-    )
-  },
-
+  component: RootLayout,
   notFoundComponent: () => <h1>404 — Not Found</h1>,
-})
+});

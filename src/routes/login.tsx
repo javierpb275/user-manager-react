@@ -1,7 +1,12 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  redirect,
+  useNavigate,
+  Link,
+} from "@tanstack/react-router";
 import { useAuthUserStore } from "../stores/auth-user.store";
+import { useLocalUsersStore } from "../stores/users-local.store";
 import { useState } from "react";
-import { loginUser } from "../services/auth.service";
 
 export const Route = createFileRoute("/login")({
   beforeLoad: () => {
@@ -15,73 +20,45 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const loginStore = useAuthUserStore((s) => s.loginStore);
+  const localUsers = useLocalUsersStore((s) => s.users);
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
+  const [form, setForm] = useState({ email: "" });
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    try {
-      const res = await loginUser(form);
+    const found = localUsers.find((u) => u.email === form.email);
 
-      const user = {
-        id: 1,
-        email: form.email,
-        first_name: form.username,
-        last_name: "Logged",
-        avatar: "",
-      };
-
-      loginStore(user, res.token);
-
-      navigate({ to: "/users" });
-    } catch (err: any) {
-      setError(err.response?.data?.error ?? "Login failed");
+    if (!found) {
+      setError("User not found");
+      return;
     }
+
+    loginStore(found);
+    navigate({ to: "/users" });
   };
 
   return (
     <div style={{ padding: 20 }}>
       <h1>Login</h1>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: 10 }}
-      >
-
-        <input
-          type="text"
-          placeholder="Username"
-          value={form.username}
-          onChange={(e) => setForm({ ...form, username: e.target.value })}
-          required
-        />
-
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <input
           type="email"
           placeholder="Email"
           value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          onChange={(e) => setForm({ email: e.target.value })}
           required
         />
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          required
-        />
-
         <button type="submit">Login</button>
       </form>
+
+      <p>
+        Don't have an account? <Link to="/register">Register</Link>
+      </p>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>

@@ -2,10 +2,11 @@ import {
   createFileRoute,
   redirect,
   useNavigate,
+  Link,
 } from "@tanstack/react-router";
 import { useAuthUserStore } from "../stores/auth-user.store";
+import { useLocalUsersStore } from "../stores/users-local.store";
 import { useState } from "react";
-import { registerUser } from "../services/auth.service";
 
 export const Route = createFileRoute("/register")({
   beforeLoad: () => {
@@ -19,36 +20,34 @@ export const Route = createFileRoute("/register")({
 
 function RegisterPage() {
   const loginStore = useAuthUserStore((s) => s.loginStore);
+  const addUser = useLocalUsersStore((s) => s.addUser);
+  const users = useLocalUsersStore((s) => s.users);
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-  });
+  const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    try {
-      const res = await registerUser(form);
-
-      const user = {
-        id: Number(res.id),
-        email: form.email,
-        first_name: form.username,
-        last_name: "",
-        avatar: "",
-      };
-
-      loginStore(user, res.token);
-
-      navigate({ to: "/users" });
-    } catch (err: any) {
-      setError(err.response?.data?.error ?? "Register failed");
+    if (users.some((u) => u.email === form.email)) {
+      setError("Email already registered");
+      return;
     }
+
+    const newUser = {
+      id: users.length + 1000,
+      email: form.email,
+      first_name: form.username,
+      last_name: "",
+      avatar: "",
+    };
+
+    addUser(newUser);
+    loginStore(newUser);
+
+    navigate({ to: "/users" });
   };
 
   return (
@@ -82,6 +81,10 @@ function RegisterPage() {
 
         <button type="submit">Register</button>
       </form>
+
+      <p>
+        Already have an account? <Link to="/login">Login</Link>
+      </p>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>

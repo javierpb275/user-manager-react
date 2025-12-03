@@ -1,4 +1,3 @@
-// src/routes/__authenticated/users_.$userId.edit.tsx
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useAuthUserStore } from "../../stores/auth-user.store";
 
@@ -8,7 +7,7 @@ export const Route = createFileRoute("/__authenticated/users_/$userId/edit")({
 
 function UserEditPage() {
   const { userId } = Route.useParams();
-  const authUser = useAuthUserStore((s) => s.authUser);
+  const authUser = useAuthUserStore((s) => s.user);
   const logoutStore = useAuthUserStore((s) => s.logoutStore);
   const navigate = useNavigate();
 
@@ -22,7 +21,7 @@ function UserEditPage() {
   return (
     <div>
       <h1>Edit User ID: {userId}</h1>
-      <p>Hello {authUser.name}</p>
+      <p>Hello {authUser.first_name}</p>
       <button onClick={handleLogout}>Logout</button>
     </div>
   );

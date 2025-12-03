@@ -1,19 +1,23 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  redirect,
+  useNavigate,
+} from "@tanstack/react-router";
 import { useAuthUserStore } from "../stores/auth-user.store";
 import { useState } from "react";
-import { loginUser } from "../services/auth.service";
+import { registerUser } from "../services/auth.service";
 
-export const Route = createFileRoute("/login")({
+export const Route = createFileRoute("/register")({
   beforeLoad: () => {
     const { user } = useAuthUserStore.getState();
     if (user) {
       throw redirect({ to: "/users" });
     }
   },
-  component: LoginPage,
+  component: RegisterPage,
 });
 
-function LoginPage() {
+function RegisterPage() {
   const loginStore = useAuthUserStore((s) => s.loginStore);
   const navigate = useNavigate();
 
@@ -29,13 +33,13 @@ function LoginPage() {
     setError("");
 
     try {
-      const res = await loginUser(form);
+      const res = await registerUser(form);
 
       const user = {
-        id: 1,
+        id: Number(res.id),
         email: form.email,
         first_name: form.username,
-        last_name: "Logged",
+        last_name: "",
         avatar: "",
       };
 
@@ -43,19 +47,15 @@ function LoginPage() {
 
       navigate({ to: "/users" });
     } catch (err: any) {
-      setError(err.response?.data?.error ?? "Login failed");
+      setError(err.response?.data?.error ?? "Register failed");
     }
   };
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Login</h1>
+      <h1>Register</h1>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: 10 }}
-      >
-
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <input
           type="text"
           placeholder="Username"
@@ -80,7 +80,7 @@ function LoginPage() {
           required
         />
 
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
 
       {error && <p style={{ color: "red" }}>{error}</p>}

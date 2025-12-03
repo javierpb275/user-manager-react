@@ -1,4 +1,7 @@
-export type TAuthUser = {
-  id: string,
-  name: string
-}
+export type TUser = {
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  avatar: string;
+};

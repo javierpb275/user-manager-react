@@ -41,7 +41,7 @@ function RegisterPage() {
       email: form.email,
       first_name: form.username,
       last_name: "",
-      avatar: "",
+      avatar: "/profile-avatar.png",
     };
 
     addUser(newUser);
@@ -54,7 +54,10 @@ function RegisterPage() {
     <div style={{ padding: 20 }}>
       <h1>Register</h1>
 
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: 10 }}
+      >
         <input
           type="text"
           placeholder="Username"

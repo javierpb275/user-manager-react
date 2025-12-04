@@ -15,7 +15,7 @@ export const useLocalUsersStore = create<LocalUsersState>()(
       users: [],
       addUser: (user) =>
         set((state) => ({
-          users: [...state.users, user],
+          users: [user, ...state.users],
         })),
       updateUser: (id, data) =>
         set((state) => {

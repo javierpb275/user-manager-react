@@ -17,15 +17,18 @@ export async function fetchUser(id: number) {
 export async function fetchCombinedUsers(page = 1, perPage = 10) {
   const apiRes = await fetchUsers(page, perPage);
   const { users: local } = useLocalUsersStore.getState();
+  if (page !== 1) {
+    return apiRes;
+  }
   const merged = apiRes.data.map(
     (u) => local.find((lu) => lu.id === u.id) || u
   );
-  const notInApi = local.filter(
+  const newLocalUsers = local.filter(
     (u) => !apiRes.data.some((apiU) => apiU.id === u.id)
   );
   return {
     ...apiRes,
-    data: [...merged, ...notInApi],
+    data: [...newLocalUsers, ...merged],
   };
 }
 

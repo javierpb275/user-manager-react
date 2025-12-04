@@ -61,13 +61,6 @@ function UsersPage() {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Users List</h1>
-
-      <Link to="/login" style={{ marginRight: 10 }}>
-        Login
-      </Link>
-      <Link to="/register">Register</Link>
-
       <ul style={{ listStyle: "none", padding: 0 }}>
         {allUsers.map((user) => (
           <li

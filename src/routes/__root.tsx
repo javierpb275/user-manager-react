@@ -1,11 +1,8 @@
-import {
-  createRootRouteWithContext,
-  Link,
-  Outlet,
-} from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import { useAuthUserStore } from "../stores/auth-user.store";
+import Navbar from "../components/navbar.component";
 
 export interface MyRouterContext {
   queryClient: QueryClient;
@@ -17,19 +14,12 @@ function RootLayout() {
 
   return (
     <div>
-      <header style={{ display: "flex", gap: 10 }}>
-        <Link to="/users">USERS</Link>
-        {!user && <Link to="/login">LOGIN</Link>}
-        {!user && <Link to="/register">REGISTER</Link>}
-        {user && (
-          <button onClick={logoutStore}>LOG OUT ({user.first_name})</button>
-        )}
+      <header>
+        <Navbar user={user} logout={logoutStore} />
       </header>
-
       <main>
         <Outlet />
       </main>
-
       <TanStackRouterDevtools />
     </div>
   );

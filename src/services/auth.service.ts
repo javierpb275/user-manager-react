@@ -19,7 +19,6 @@ export type TErrorResponse = {
   error: string;
 };
 
-
 export async function loginUser(body: TAuthRequest): Promise<TLoginResponse> {
   const res = await api.post("/login", body);
   return res.data;

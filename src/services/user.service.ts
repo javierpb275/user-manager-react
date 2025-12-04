@@ -17,15 +17,12 @@ export async function fetchUser(id: number) {
 export async function fetchCombinedUsers(page = 1, perPage = 10) {
   const apiRes = await fetchUsers(page, perPage);
   const { users: local } = useLocalUsersStore.getState();
-
   const merged = apiRes.data.map(
     (u) => local.find((lu) => lu.id === u.id) || u
   );
-
   const notInApi = local.filter(
     (u) => !apiRes.data.some((apiU) => apiU.id === u.id)
   );
-
   return {
     ...apiRes,
     data: [...merged, ...notInApi],
@@ -35,12 +32,9 @@ export async function fetchCombinedUsers(page = 1, perPage = 10) {
 export async function fetchCombinedUser(id: number) {
   const { users: local } = useLocalUsersStore.getState();
   const localUser = local.find((u) => u.id === id);
-
   if (localUser) {
     return { data: localUser };
   }
-
   const apiRes = await fetchUser(id);
   return { data: apiRes.data };
 }
-

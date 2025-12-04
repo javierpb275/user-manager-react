@@ -45,7 +45,10 @@ function LoginPage() {
     <div style={{ padding: 20 }}>
       <h1>Login</h1>
 
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", flexDirection: "column", gap: 10 }}
+      >
         <input
           type="email"
           placeholder="Email"

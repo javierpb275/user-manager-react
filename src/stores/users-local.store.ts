@@ -1,11 +1,9 @@
-// src/stores/users-local.store.ts
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { TUser } from "../types/user.types";
 
 interface LocalUsersState {
   users: TUser[];
-
   addUser: (user: TUser) => void;
   updateUser: (id: number, data: Partial<TUser>) => void;
   findUser: (id: number) => TUser | undefined;
@@ -15,36 +13,29 @@ export const useLocalUsersStore = create<LocalUsersState>()(
   persist(
     (set, get) => ({
       users: [],
-
       addUser: (user) =>
         set((state) => ({
           users: [...state.users, user],
         })),
-
-      // UPsert: if exists merge, otherwise add a new user using provided fields
       updateUser: (id, data) =>
         set((state) => {
           const exists = state.users.some((u) => u.id === id);
-
           if (exists) {
             return {
-              users: state.users.map((u) => (u.id === id ? { ...u, ...data } : u)),
+              users: state.users.map((u) =>
+                u.id === id ? { ...u, ...data } : u
+              ),
             };
           }
-
-          // If user not present locally, create a new entry.
-          // We need to fill required fields — put sensible defaults for missing ones.
           const newUser: TUser = {
             id,
             email: (data.email as string) || "",
             first_name: (data.first_name as string) || "",
             last_name: (data.last_name as string) || "",
-            avatar: (data.avatar as string) || "", // optional
+            avatar: (data.avatar as string) || "",
           };
-
           return { users: [...state.users, newUser] };
         }),
-
       findUser: (id) => get().users.find((u) => u.id === id),
     }),
     { name: "user-manager-local-users" }

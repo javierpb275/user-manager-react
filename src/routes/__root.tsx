@@ -1,19 +1,16 @@
-// src/routes/__root.tsx
-
 import {
   createRootRouteWithContext,
   Link,
   Outlet,
-} from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import type { QueryClient } from '@tanstack/react-query'
-import { useAuthUserStore } from '../stores/auth-user.store'
+} from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import type { QueryClient } from "@tanstack/react-query";
+import { useAuthUserStore } from "../stores/auth-user.store";
 
 export interface MyRouterContext {
-  queryClient: QueryClient
+  queryClient: QueryClient;
 }
 
-// ⬇️ Mueve el componente fuera y dale un nombre en mayúscula
 function RootLayout() {
   const logoutStore = useAuthUserStore((s) => s.logoutStore);
   const user = useAuthUserStore((s) => s.user);
@@ -25,9 +22,7 @@ function RootLayout() {
         {!user && <Link to="/login">LOGIN</Link>}
         {!user && <Link to="/register">REGISTER</Link>}
         {user && (
-          <button onClick={logoutStore}>
-            LOG OUT ({user.first_name})
-          </button>
+          <button onClick={logoutStore}>LOG OUT ({user.first_name})</button>
         )}
       </header>
 

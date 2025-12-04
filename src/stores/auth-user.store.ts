@@ -4,7 +4,6 @@ import type { TUser } from "../types/user.types";
 
 interface AuthUserState {
   user: TUser | null;
-
   loginStore: (user: TUser) => void;
   logoutStore: () => void;
 }
@@ -13,12 +12,10 @@ export const useAuthUserStore = create<AuthUserState>()(
   persist(
     (set) => ({
       user: null,
-
       loginStore: (user) =>
         set(() => ({
           user,
         })),
-
       logoutStore: () =>
         set(() => ({
           user: null,

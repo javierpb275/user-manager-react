@@ -30,15 +30,25 @@ function UserEditPage() {
     });
   }, [userId]);
 
+  // src/routes/__authenticated/users_.$userId.edit.tsx
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     updateUser(Number(userId), form);
 
-    // 🧹 Limpiar el caché de React Query para este user
+    // also update local state form so the page shows the new values immediately
+    setForm((prev) => ({ ...prev, ...form }));
+
+    // Invalidate the detail query for this user (userId is a string param)
     queryClient.invalidateQueries({ queryKey: ["user", userId] });
 
-    // También para la lista de users (para que se vea actualizado en /users)
-    queryClient.invalidateQueries({ queryKey: ["users"] });
+    // Invalidate users list queries — be explicit for the page/perPage you use:
+    queryClient.invalidateQueries({ queryKey: ["users", 1, 10] });
+
+    // Or, to invalidate any query starting with "users":
+    // queryClient.invalidateQueries({
+    //   predicate: (query) => query.queryKey?.[0] === "users"
+    // });
 
     navigate({ to: "/users/$userId", params: { userId } });
   };

@@ -18,12 +18,10 @@ export async function fetchCombinedUsers(page = 1, perPage = 10) {
   const apiRes = await fetchUsers(page, perPage);
   const { users: local } = useLocalUsersStore.getState();
 
-  // Reemplazar usuarios API con locales si coinciden
   const merged = apiRes.data.map(
     (u) => local.find((lu) => lu.id === u.id) || u
   );
 
-  // Agregar usuarios locales que no existen en API (IDs nuevos)
   const notInApi = local.filter(
     (u) => !apiRes.data.some((apiU) => apiU.id === u.id)
   );
@@ -36,19 +34,13 @@ export async function fetchCombinedUsers(page = 1, perPage = 10) {
 
 export async function fetchCombinedUser(id: number) {
   const { users: local } = useLocalUsersStore.getState();
-
-  // Si existe en local, devolverlo sin ni siquiera llamar a la API
   const localUser = local.find((u) => u.id === id);
+
   if (localUser) {
     return { data: localUser };
   }
 
-  // Si no está en local, intentar la API
-  try {
-    const apiRes = await fetchUser(id);
-    return { data: apiRes.data };
-  } catch (err) {
-    throw new Error("User not found in API nor local store.");
-  }
+  const apiRes = await fetchUser(id);
+  return { data: apiRes.data };
 }
 

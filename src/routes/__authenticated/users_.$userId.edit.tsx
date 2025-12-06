@@ -4,6 +4,7 @@ import { useLocalUsersStore } from "../../stores/users-local.store";
 import { fetchCombinedUser } from "../../services/user.service";
 import { useQueryClient } from "@tanstack/react-query";
 import UserEditForm from "../../components/user-edit-form.component";
+import { RequireAuth } from "../../components/wrappers/requires-auth.component";
 
 export const Route = createFileRoute("/__authenticated/users_/$userId/edit")({
   component: UserEditPage,
@@ -48,7 +49,9 @@ function UserEditPage() {
 
   return (
     <div className="px-4 pb-10">
-      <UserEditForm form={form} setForm={setForm} onSubmit={handleSubmit} />
+      <RequireAuth>
+        <UserEditForm form={form} setForm={setForm} onSubmit={handleSubmit} />
+      </RequireAuth>
     </div>
   );
 }

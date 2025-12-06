@@ -3,6 +3,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import { useAuthUserStore } from "../stores/auth-user.store";
 import Navbar from "../components/navbar.component";
+import Page404 from "../pages/404.page";
 
 export interface MyRouterContext {
   queryClient: QueryClient;
@@ -25,5 +26,5 @@ function RootLayout() {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootLayout,
-  notFoundComponent: () => <h1>404 — Not Found</h1>,
+  notFoundComponent: () => <Page404/>,
 });

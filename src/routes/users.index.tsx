@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchCombinedUsers } from "../services/user.service";
 import { useEffect, useRef } from "react";
 import type { TUser } from "../types/user.types";
+import CardList from "../components/card-list.component";
 
 export const Route = createFileRoute("/users/")({
   component: UsersPage,
@@ -61,44 +62,8 @@ function UsersPage() {
 
   return (
     <div style={{ padding: 20 }}>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {allUsers.map((user) => (
-          <li
-            key={user.id}
-            style={{
-              padding: 12,
-              marginBottom: 10,
-              border: "1px solid #ccc",
-              borderRadius: 6,
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-            }}
-          >
-            <img
-              src={user.avatar}
-              alt={`${user.first_name} ${user.last_name}`}
-              width={50}
-              height={50}
-              style={{ borderRadius: "50%" }}
-            />
+<CardList users={allUsers} />
 
-            <Link
-              to="/users/$userId"
-              params={{ userId: String(user.id) }}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <div>
-                <strong>
-                  {user.first_name} {user.last_name}
-                </strong>
-                <br />
-                <small>{user.email}</small>
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
 
       {/* infinite scroll loader */}
       <div ref={loadMoreRef} style={{ height: 40 }} />

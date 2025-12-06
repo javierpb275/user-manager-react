@@ -14,9 +14,7 @@ function RootLayout() {
 
   return (
     <div>
-      <header>
-        <Navbar user={user} logout={logoutStore} />
-      </header>
+      <Navbar user={user} logout={logoutStore} />
       <main>
         <Outlet />
       </main>

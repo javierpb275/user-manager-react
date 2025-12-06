@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocalUsersStore } from "../../stores/users-local.store";
 import { fetchCombinedUser } from "../../services/user.service";
 import { useQueryClient } from "@tanstack/react-query";
+import UserEditForm from "../../components/user-edit-form.component";
 
 export const Route = createFileRoute("/__authenticated/users_/$userId/edit")({
   component: UserEditPage,
@@ -46,50 +47,8 @@ function UserEditPage() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Edit User {userId}</h1>
-      <img
-        src={form.avatar}
-        alt="Avatar"
-        width={100}
-        height={100}
-        style={{ borderRadius: "50%", marginBottom: 20 }}
-      />
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: 10 }}
-      >
-        <input
-          type="text"
-          value={form.avatar}
-          onChange={(e) => setForm({ ...form, avatar: e.target.value })}
-          style={{ display: "none" }}
-        />
-
-        <input
-          type="text"
-          placeholder="First Name"
-          value={form.first_name}
-          onChange={(e) => setForm({ ...form, first_name: e.target.value })}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={form.last_name}
-          onChange={(e) => setForm({ ...form, last_name: e.target.value })}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          required
-        />
-
-        <button type="submit">Save</button>
-      </form>
+    <div className="px-4 pb-10">
+      <UserEditForm form={form} setForm={setForm} onSubmit={handleSubmit} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCombinedUser } from "../services/user.service";
+import UserDetailsCard from "../components/user-details-card.component";
 
 export const Route = createFileRoute("/users/$userId")({
   component: UserPage,
@@ -20,28 +21,8 @@ function UserPage() {
   const user = data!.data;
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>User Detail</h1>
-      <p>
-        <strong>ID:</strong> {user.id}
-      </p>
-      <p>
-        <strong>Name:</strong> {user.first_name} {user.last_name}
-      </p>
-      <p>
-        <strong>Email:</strong> {user.email}
-      </p>
-      <img
-        src={user.avatar}
-        width={100}
-        height={100}
-        style={{ borderRadius: "50%" }}
-      />
-
-      <br />
-      <Link to="/users/$userId/edit" params={{ userId: String(user.id) }}>
-        <button>Edit User</button>
-      </Link>
-    </div>
+  <div className="px-4 pb-10">
+    <UserDetailsCard user={user} />
+  </div>
   );
 }

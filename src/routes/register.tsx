@@ -7,6 +7,7 @@ import {
 import { useAuthUserStore } from "../stores/auth-user.store";
 import { useLocalUsersStore } from "../stores/users-local.store";
 import { useState } from "react";
+import { RegisterForm } from "../components/register-form.component";
 
 export const Route = createFileRoute("/register")({
   beforeLoad: () => {
@@ -23,73 +24,43 @@ function RegisterPage() {
   const addUser = useLocalUsersStore((s) => s.addUser);
   const users = useLocalUsersStore((s) => s.users);
   const navigate = useNavigate();
-
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    if (users.some((u) => u.email === form.email)) {
-      setError("Email already registered");
-      return;
-    }
-
-    const newUser = {
-      id: Date.now(),
-      email: form.email,
-      first_name: form.username,
-      last_name: "",
-      avatar: "/profile-avatar.png",
-    };
-
-    addUser(newUser);
-    loginStore(newUser);
-
-    navigate({ to: "/users" });
-  };
-
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Register</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+      <h1 className="text-2xl font-semibold mb-6 text-center">Register</h1>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: 10 }}
-      >
-        <input
-          type="text"
-          placeholder="Username"
-          value={form.username}
-          onChange={(e) => setForm({ ...form, username: e.target.value })}
-          required
-        />
+      <RegisterForm
+        error={error}
+        onSubmit={(formData) => {
+          if (users.some((u) => u.email === formData.email)) {
+            setError("Email already registered");
+            return;
+          }
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          required
-        />
+          const newUser = {
+            id: Date.now(),
+            email: formData.email,
+            first_name: formData.username,
+            last_name: "",
+            avatar: "/profile-avatar.png",
+          };
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          required
-        />
+          addUser(newUser);
+          loginStore(newUser);
+          navigate({ to: "/users" });
+        }}
+      />
 
-        <button type="submit">Register</button>
-      </form>
-
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
+      <p className="text-center mt-4">
+        Already have an account?{" "}
+        <Link to="/login" className="text-indigo-600 font-medium">
+          Login
+        </Link>
       </p>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
     </div>
   );
 }
+

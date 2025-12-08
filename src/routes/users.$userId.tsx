@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCombinedUser } from "../services/user.service";
 import UserDetailsCard from "../components/user-details-card.component";
+import { Spinner } from "../components/loaders/spinner.component";
 
 export const Route = createFileRoute("/users/$userId")({
   component: UserPage,
@@ -15,7 +16,7 @@ function UserPage() {
     queryFn: () => fetchCombinedUser(Number(userId)),
   });
 
-  if (isLoading) return <p>Loading user...</p>;
+  if (isLoading) return <Spinner/>;
   if (isError) return <p>Failed to load user.</p>;
 
   const user = data!.data;

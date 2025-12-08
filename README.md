@@ -1,73 +1,58 @@
-# React + TypeScript + Vite
+# USER MANAGER
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Primer paso:
 
-Currently, two official plugins are available:
+Descargar el zip o clonar el repositorio.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Segundo paso:
 
-## React Compiler
+Ejecutar en la carpeta raíz:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Tercer paso:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Añadir los archivos `.env.development` y `.env.production` con las siguientes variables de entorno:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_API_URL=https://reqres.in/api
+VITE_API_KEY=tuapikey
 ```
+
+> ⚠️ Visita [https://reqres.in/](https://reqres.in/) y crea tu propia API Key, luego reemplaza el valor en `VITE_API_KEY`.
+
+## Cuarto paso:
+
+Ejecutar la app con:
+
+```bash
+pnpm run dev
+```
+
+---
+
+## Librerías usadas
+
+**Estilos:**
+
+* `tailwindcss`
+* `@tailwindcss/vite`
+* `@heroicons/react`
+* `@headlessui/react`
+
+**Enrutado:**
+
+* `@tanstack/react-router`
+* `@tanstack/react-router-devtools`
+
+**Estados:**
+
+* `zustand`
+
+**Llamadas API:**
+
+* `axios`
+* `@tanstack/react-query`
+

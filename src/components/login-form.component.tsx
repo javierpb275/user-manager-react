@@ -7,12 +7,10 @@ type LoginFormProps = {
 
 export const LoginForm = ({ onSubmit, error }: LoginFormProps) => {
   const [email, setEmail] = useState("");
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(email);
   };
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -35,9 +33,7 @@ export const LoginForm = ({ onSubmit, error }: LoginFormProps) => {
           className="mt-2 w-full rounded-lg border-gray-300 px-4 py-4 text-lg focus:border-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-900 dark:text-white"
         />
       </div>
-
       {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-
       <button
         type="submit"
         className="w-full rounded-lg border border-indigo-600 bg-indigo-600 px-6 py-4 text-lg font-medium text-white transition-colors hover:bg-transparent hover:text-indigo-600 dark:hover:bg-indigo-700 dark:hover:text-white"

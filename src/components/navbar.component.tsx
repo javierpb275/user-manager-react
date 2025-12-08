@@ -9,12 +9,10 @@ type NavbarProps = {
 
 export default function Navbar({ user, logout }: NavbarProps) {
   const [open, setOpen] = useState(false);
-
   return (
     <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 fixed top-0 left-0 w-full z-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* LEFT — Logo */}
           <div className="md:flex md:items-center md:gap-12">
             <Link to="/" className="block text-teal-600 dark:text-teal-600">
               <span className="sr-only">Home</span>
@@ -24,12 +22,13 @@ export default function Navbar({ user, logout }: NavbarProps) {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path d="M0.41 10.3847C1.14777 7.4194 ..." fill="currentColor" />
+                <path
+                  d="M0.41 10.3847C1.14777 7.4194 ..."
+                  fill="currentColor"
+                />
               </svg>
             </Link>
           </div>
-
-          {/* CENTER NAVIGATION — Desktop */}
           <div className="hidden md:block">
             <nav aria-label="Global">
               <ul className="flex items-center gap-6 text-sm">
@@ -44,8 +43,6 @@ export default function Navbar({ user, logout }: NavbarProps) {
               </ul>
             </nav>
           </div>
-
-          {/* RIGHT SECTION */}
           <div className="flex items-center gap-4">
             {!user && (
               <div className="hidden sm:flex sm:gap-4">
@@ -63,7 +60,6 @@ export default function Navbar({ user, logout }: NavbarProps) {
                 </Link>
               </div>
             )}
-
             {user && (
               <div className="relative hidden md:block">
                 <button
@@ -76,7 +72,6 @@ export default function Navbar({ user, logout }: NavbarProps) {
                     alt={user.first_name}
                   />
                 </button>
-
                 {open && (
                   <div className="absolute right-0 mt-2 w-56 rounded-md border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg divide-y divide-gray-100 dark:divide-gray-700 z-50">
                     <div className="p-2">
@@ -88,7 +83,6 @@ export default function Navbar({ user, logout }: NavbarProps) {
                         </span>
                       </p>
                     </div>
-
                     <div className="p-2">
                       <button
                         onClick={() => {
@@ -104,8 +98,6 @@ export default function Navbar({ user, logout }: NavbarProps) {
                 )}
               </div>
             )}
-
-            {/* MOBILE MENU BUTTON */}
             <div className="block md:hidden">
               <button
                 onClick={() => setOpen(!open)}
@@ -119,15 +111,17 @@ export default function Navbar({ user, logout }: NavbarProps) {
                   stroke="currentColor"
                   strokeWidth="2"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
               </button>
             </div>
           </div>
         </div>
       </div>
-
-      {/* MOBILE MENU PANEL */}
       {open && (
         <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
           <nav className="px-2 pt-2 pb-4 space-y-1">
@@ -138,7 +132,6 @@ export default function Navbar({ user, logout }: NavbarProps) {
             >
               Users
             </Link>
-
             {!user && (
               <>
                 <Link
@@ -157,7 +150,6 @@ export default function Navbar({ user, logout }: NavbarProps) {
                 </Link>
               </>
             )}
-
             {user && (
               <button
                 onClick={() => {

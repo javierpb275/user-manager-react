@@ -12,7 +12,6 @@ export interface MyRouterContext {
 function RootLayout() {
   const logoutStore = useAuthUserStore((s) => s.logoutStore);
   const user = useAuthUserStore((s) => s.user);
-
   return (
     <div>
       <Navbar user={user} logout={logoutStore} />
@@ -26,5 +25,5 @@ function RootLayout() {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootLayout,
-  notFoundComponent: () => <Page404/>,
+  notFoundComponent: () => <Page404 />,
 });

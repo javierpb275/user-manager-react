@@ -26,7 +26,6 @@ export default function UserEditForm({ form, setForm, onSubmit }: Props) {
         bg-gray-800 p-6
       "
     >
-      {/* Avatar Preview */}
       <div className="flex justify-center">
         <img
           src={form.avatar || "/profile-avatar.png"}
@@ -34,21 +33,19 @@ export default function UserEditForm({ form, setForm, onSubmit }: Props) {
           className="w-24 h-24 rounded-full object-cover border border-gray-500"
         />
       </div>
-
-      {/* Hidden Avatar Input */}
       <input
         type="text"
         value={form.avatar}
         onChange={(e) => setForm((f) => ({ ...f, avatar: e.target.value }))}
         className="hidden"
       />
-
-      {/* First Name */}
       <div>
-        <label className="block text-sm font-medium text-white" htmlFor="firstName">
+        <label
+          className="block text-sm font-medium text-white"
+          htmlFor="firstName"
+        >
           First Name
         </label>
-
         <input
           id="firstName"
           type="text"
@@ -65,13 +62,13 @@ export default function UserEditForm({ form, setForm, onSubmit }: Props) {
           placeholder="First name"
         />
       </div>
-
-      {/* Last Name */}
       <div>
-        <label className="block text-sm font-medium text-white" htmlFor="lastName">
+        <label
+          className="block text-sm font-medium text-white"
+          htmlFor="lastName"
+        >
           Last Name
         </label>
-
         <input
           id="lastName"
           type="text"
@@ -88,20 +85,15 @@ export default function UserEditForm({ form, setForm, onSubmit }: Props) {
           placeholder="Last name"
         />
       </div>
-
-      {/* Email */}
       <div>
         <label className="block text-sm font-medium text-white" htmlFor="email">
           Email
         </label>
-
         <input
           id="email"
           type="email"
           value={form.email}
-          onChange={(e) =>
-            setForm((f) => ({ ...f, email: e.target.value }))
-          }
+          onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
           required
           className="
             mt-1 w-full rounded-lg border-gray-600 
@@ -111,8 +103,6 @@ export default function UserEditForm({ form, setForm, onSubmit }: Props) {
           placeholder="Email address"
         />
       </div>
-
-      {/* Submit */}
       <button
         type="submit"
         className="

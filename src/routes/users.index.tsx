@@ -11,10 +11,8 @@ export const Route = createFileRoute("/users/")({
 function UsersPage() {
   const { users, loadMoreRef, isLoading, isError, isFetchingNextPage } =
     useUsersPage();
-
   if (isLoading) return <Spinner />;
   if (isError) return <ErrorPage code={500} message="Failed to load user." />;
-
   return (
     <div style={{ padding: 20 }}>
       <CardList users={users} />
